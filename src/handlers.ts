@@ -34,7 +34,7 @@ export async function getPokemonByName(request: FastifyRequest, reply: FastifyRe
   return reply
 }
 
-export const computeResponse = async (response: unknown, reply: FastifyReply) => {
+export const computeResponse = async (response: any, reply: FastifyReply) => {
   const resp = response as any
 
   let types = resp.types.map(type => type.type).map(type => { return type.url }).reduce((types, typeUrl) => types.push(typeUrl));

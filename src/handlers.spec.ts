@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { getPokemonByName } from "./handlers";
+import { getAllPokemons, getPokemonByName } from "./handlers";
 
 let httpGetMockResponse;
 
@@ -51,6 +51,36 @@ describe("handlers", () => {
       await getPokemonByName(request, response);
 
       expect(response.code).not.toHaveBeenCalledWith(404);
+    });
+  });
+
+  describe("getAllPokemons", () => {
+    let request: FastifyRequest;
+    let response: FastifyReply;
+    let mockCode;
+    let mockSend;
+
+    beforeEach(() => {
+      httpGetMockResponse = null;
+
+      request = {
+        params: {
+          name: "alice",
+        },
+      } as FastifyRequest;
+      mockCode = jest.fn().mockReturnThis();
+      mockSend = jest.fn();
+      response = {
+        code: mockCode,
+        send: mockSend,
+      } as FastifyReply;
+    });
+    it("should return the list of pokemons", async () => {
+      httpGetMockResponse = [{ something: "here", andSomething: "here" }];
+
+      await getAllPokemons(request, response);
+
+      expect(response.send).toHaveBeenCalledWith(httpGetMockResponse);
     });
   });
 });

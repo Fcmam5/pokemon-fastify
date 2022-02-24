@@ -6,8 +6,6 @@ import { getNotFoundResponse } from "./errors";
 const APPLICATION_JSON_HEADER = "application/json";
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
-// TODO: get all pokemons ?offset=20&limit=20
-
 export async function getPokemonByName(
   request: FastifyRequest,
   reply: FastifyReply
@@ -26,14 +24,26 @@ export async function getPokemonByName(
     );
   }
 
-  // computeResponse(response, reply);
+  // computeResponse(response);
 
   reply.send(response);
 
   return reply;
 }
 
-export const computeResponse = async (response: any, reply: FastifyReply) => {
+export async function getAllPokemons(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  // TODO: Implement pagination feature
+  let response = await httpGet(`${POKEMON_API_URL}?offset=20&limit=20`);
+
+  reply.send(response);
+
+  return reply;
+}
+
+export const computeResponse = async (response: any) => {
   const resp = response as any;
 
   let types = resp.types

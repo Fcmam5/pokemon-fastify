@@ -4,7 +4,7 @@
  */
 
 import { getBadRequestResponse } from "./errors";
-import { FastifyReply, FastifyRequest, RouteHandlerMethod } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { BAD_REQUEST } from "http-status";
 
 export const checkNameInParams = (fn) => (

@@ -1,9 +1,8 @@
-import { stat } from "fs"
 import { StatD } from "./StatD";
 
 export interface Stat {
-    base_stat: number
-    effort: String
-    stat: StatD
-    averageStat: number
+  base_stat: number;
+  effort: string;
+  stat: StatD;
+  averageStat: number;
 }

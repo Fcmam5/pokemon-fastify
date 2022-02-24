@@ -8,9 +8,9 @@ jest.mock("./infrastructure/http-client", () => ({
 }));
 
 describe("handlers", () => {
-  describe.skip("computeResponse", () => {
-    it("something", () => {});
-  });
+  // describe.skip("computeResponse", () => {
+  //   it("something", () => {});
+  // });
 
   describe("getPokemonByName", () => {
     let request: FastifyRequest;

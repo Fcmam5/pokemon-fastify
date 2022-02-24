@@ -1,9 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { httpGet } from "./infrastructure/http-client";
-import { PokemonWithStats } from "models/PokemonWithStats";
 import { getNotFoundResponse } from "./errors";
 
-const APPLICATION_JSON_HEADER = "application/json";
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
 export async function getPokemonByName(
@@ -13,7 +11,7 @@ export async function getPokemonByName(
   const name: string = request.params["name"];
   const url = `${POKEMON_API_URL}/${name}`;
 
-  let response = await httpGet(url);
+  const response = await httpGet(url);
 
   if (!response) {
     reply.code(404).send(
@@ -36,52 +34,52 @@ export async function getAllPokemons(
   reply: FastifyReply
 ) {
   // TODO: Implement pagination feature
-  let response = await httpGet(`${POKEMON_API_URL}?offset=20&limit=20`);
+  const response = await httpGet(`${POKEMON_API_URL}?offset=20&limit=20`);
 
   reply.send(response);
 
   return reply;
 }
 
-export const computeResponse = async (response: any) => {
-  const resp = response as any;
+// export const computeResponse = async (response: any) => {
+//   const resp = response as any;
 
-  let types = resp.types
-    .map((type) => type.type)
-    .map((type) => {
-      return type.url;
-    })
-    .reduce((types, typeUrl) => types.push(typeUrl));
+//   let types = resp.types
+//     .map((type) => type.type)
+//     .map((type) => {
+//       return type.url;
+//     })
+//     .reduce((types, typeUrl) => types.push(typeUrl));
 
-  let pokemonTypes = [];
+//   let pokemonTypes = [];
 
-  types.forEach((element) => {
-    const http = require("http");
-    const keepAliveAgent = new http.Agent({ keepAlive: true });
+//   types.forEach((element) => {
+//     const http = require("http");
+//     const keepAliveAgent = new http.Agent({ keepAlive: true });
 
-    http.request({ hostname: element }, (response) =>
-      pokemonTypes.push(response)
-    );
-  });
+//     http.request({ hostname: element }, (response) =>
+//       pokemonTypes.push(response)
+//     );
+//   });
 
-  if (pokemonTypes == undefined) throw pokemonTypes;
+//   if (pokemonTypes == undefined) throw pokemonTypes;
 
-  response.stats.forEach((element) => {
-    var stats = [];
+//   response.stats.forEach((element) => {
+//     var stats = [];
 
-    pokemonTypes.map((pok) =>
-      pok.stats.map((st) =>
-        st.stat.name.toUpperCase() == element.stat.name
-          ? stats.push(st.base_state)
-          : []
-      )
-    );
+//     pokemonTypes.map((pok) =>
+//       pok.stats.map((st) =>
+//         st.stat.name.toUpperCase() == element.stat.name
+//           ? stats.push(st.base_state)
+//           : []
+//       )
+//     );
 
-    if (stats) {
-      let avg = stats.reduce((a, b) => a + b) / stats.length;
-      element.averageStat = avg;
-    } else {
-      element.averageStat = 0;
-    }
-  });
-};
+//     if (stats) {
+//       let avg = stats.reduce((a, b) => a + b) / stats.length;
+//       element.averageStat = avg;
+//     } else {
+//       element.averageStat = 0;
+//     }
+//   });
+// };

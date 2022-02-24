@@ -1,1 +1,1 @@
-export type StatD = Record<'name' | 'url', string>
+export type StatD = Record<"name" | "url", string>;

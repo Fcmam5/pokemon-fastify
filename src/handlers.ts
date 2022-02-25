@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { httpGet } from "./infrastructure";
 import { getNotFoundResponse } from "./errors";
-import { PokemonListResponse } from "handlers.responses";
+import { PokemonListResponse, PokemonResponse } from "handlers.responses";
 import { PokemonWithStats } from "./models/PokemonWithStats";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
@@ -14,7 +14,7 @@ export async function getPokemonByName(
   const name: string = request.params["name"];
   const url = `${POKEMON_API_URL}/${name}`;
 
-  const response = await httpGet(url);
+  const response = await httpGet<PokemonResponse>(url);
 
   if (!response) {
     return reply.code(404).send(
@@ -49,7 +49,7 @@ export async function getAllPokemons(
 // It is really confusing to guess what's expected as it was using wrong object keys; and doing weird calculations
 export const computeResponseForSet = async (rs: PokemonListResponse) => {
   const urls = rs.results.map((rs) => rs.url);
-  const promises = urls.map((url) => httpGet(url));
+  const promises = urls.map((url) => httpGet<PokemonResponse>(url));
 
   // Only supported in Node >=12.9.0: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled
   const responses = await Promise.allSettled(promises);
@@ -66,7 +66,7 @@ export const computeResponseForSet = async (rs: PokemonListResponse) => {
   return rss;
 };
 
-export const computeResponseForOne = (rs: any) => {
+export const computeResponseForOne = (rs: PokemonResponse) => {
   // The expected results are unclear, so not doing anything in this method
   return new PokemonWithStats(
     rs.name,

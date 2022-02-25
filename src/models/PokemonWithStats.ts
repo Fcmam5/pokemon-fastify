@@ -2,17 +2,25 @@ import { Species } from "./Species";
 import { Stat } from "./Stat";
 
 export class PokemonWithStats {
+  public averageStat: number;
+
   constructor(
-    name: string,
-    height: number,
-    base_experience: number,
-    averageBaseExperience: number,
-    id: number,
-    sprite_img: string,
-    species: Species,
-    url: string,
-    stats: Array<Stat>
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ) {}
-  // TODO revisit this
+    public name: string,
+    public height: number,
+    public base_experience: number,
+    // public averageBaseExperience: number,
+    public id: number,
+    public sprite_img: string,
+    public species: Species,
+    public url: string,
+    public stats: Array<Stat>
+  ) {
+    this.calculateAverageStat();
+  }
+
+  private calculateAverageStat() {
+    const count = this.stats.length;
+    this.averageStat =
+      this.stats.reduce((acc, st) => st.base_stat + st.base_stat, 0) / count;
+  }
 }

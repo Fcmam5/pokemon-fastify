@@ -2,7 +2,6 @@ import { StatD } from "./StatD";
 
 export interface Stat {
   base_stat: number;
-  effort: string;
+  effort: number;
   stat: StatD;
-  averageStat: number;
 }

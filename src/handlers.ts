@@ -1,6 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { httpGet } from "./infrastructure/http-client";
 import { getNotFoundResponse } from "./errors";
+import { PokemonListResponse } from "handlers.responses";
+import { PokemonWithStats } from "./models/PokemonWithStats";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
@@ -14,7 +16,7 @@ export async function getPokemonByName(
   const response = await httpGet(url);
 
   if (!response) {
-    reply.code(404).send(
+    return reply.code(404).send(
       getNotFoundResponse({
         detail: `The Pokemon with the name "${name}" is not found`,
         instance: `pokemon/${name}`,
@@ -22,9 +24,7 @@ export async function getPokemonByName(
     );
   }
 
-  // computeResponse(response);
-
-  reply.send(response);
+  reply.send(computeResponseForOne(response, url));
 
   return reply;
 }
@@ -34,7 +34,10 @@ export async function getAllPokemons(
   reply: FastifyReply
 ) {
   // TODO: Implement pagination feature
-  const response = await httpGet(`${POKEMON_API_URL}?offset=20&limit=20`);
+  const response = await httpGet<PokemonListResponse>(
+    `${POKEMON_API_URL}?offset=20&limit=20`
+  );
+  // computeResponse(response);
 
   reply.send(response);
 
@@ -83,3 +86,17 @@ export async function getAllPokemons(
 //     }
 //   });
 // };
+
+export const computeResponseForOne = (rs: any, url: string) => {
+  // The expected results are unclear, so
+  return new PokemonWithStats(
+    rs.name,
+    rs.height,
+    rs.base_experience,
+    rs.id,
+    rs.sprites.front_default,
+    rs.species,
+    url,
+    rs.stats
+  );
+};

@@ -4,7 +4,7 @@ import * as handlers from "./handlers";
 let httpGetMockResponse;
 
 jest.mock("./infrastructure/http-client", () => ({
-  httpGet: jest.fn().mockImplementation(() => httpGetMockResponse),
+  httpGetWithCache: jest.fn().mockImplementation(() => httpGetMockResponse),
 }));
 
 describe("handlers", () => {

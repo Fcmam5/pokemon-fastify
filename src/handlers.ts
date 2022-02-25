@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { httpGet } from "./infrastructure";
+import { httpGetWithCache } from "./infrastructure";
 import { getNotFoundResponse } from "./errors";
 import { PokemonListResponse, PokemonResponse } from "handlers.responses";
 import { PokemonWithStats } from "./models/PokemonWithStats";
@@ -14,7 +14,7 @@ export async function getPokemonByName(
   const name: string = request.params["name"];
   const url = `${POKEMON_API_URL}/${name}`;
 
-  const response = await httpGet<PokemonResponse>(url);
+  const response = await httpGetWithCache<PokemonResponse>(url);
 
   if (!response) {
     return reply.code(404).send(
@@ -35,8 +35,8 @@ export async function getAllPokemons(
   reply: FastifyReply
 ) {
   // TODO: Implement pagination feature
-  const response = await httpGet<PokemonListResponse>(
-    `${POKEMON_API_URL}?offset=20&limit=20`
+  const response = await httpGetWithCache<PokemonListResponse>(
+    `${POKEMON_API_URL}?offset=20&limit=50`
   );
   const computed = await computeResponseForSet(response);
 
@@ -49,7 +49,7 @@ export async function getAllPokemons(
 // It is really confusing to guess what's expected as it was using wrong object keys; and doing weird calculations
 export const computeResponseForSet = async (rs: PokemonListResponse) => {
   const urls = rs.results.map((rs) => rs.url);
-  const promises = urls.map((url) => httpGet<PokemonResponse>(url));
+  const promises = urls.map((url) => httpGetWithCache<PokemonResponse>(url));
 
   // Only supported in Node >=12.9.0: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled
   const responses = await Promise.allSettled(promises);

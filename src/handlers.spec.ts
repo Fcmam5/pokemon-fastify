@@ -1,9 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-  computeResponseForOne,
-  getAllPokemons,
-  getPokemonByName,
-} from "./handlers";
+import * as handlers from "./handlers";
 
 let httpGetMockResponse;
 
@@ -15,7 +11,7 @@ describe("handlers", () => {
   describe("computeResponse", () => {
     describe("computeResponseForOne", () => {
       it("should calculate stats for one Pokemon", () => {
-        const rs = computeResponseForOne(bulbasaurMock, "url");
+        const rs = handlers.computeResponseForOne(bulbasaurMock);
 
         expect(rs).toEqual(bulbasaurExpectedResponse);
       });
@@ -47,7 +43,7 @@ describe("handlers", () => {
     it("should return a 404 error if the Pokemon is not found", async () => {
       httpGetMockResponse = null;
 
-      await getPokemonByName(request, response);
+      await handlers.getPokemonByName(request, response);
 
       expect(response.code).toHaveBeenCalledWith(404);
       expect(response.send).toHaveBeenCalled();
@@ -56,7 +52,7 @@ describe("handlers", () => {
     it("should return the Pokemon data", async () => {
       httpGetMockResponse = bulbasaurMock;
 
-      await getPokemonByName(request, response);
+      await handlers.getPokemonByName(request, response);
 
       expect(response.code).not.toHaveBeenCalledWith(404);
     });
@@ -84,11 +80,12 @@ describe("handlers", () => {
       } as FastifyReply;
     });
     it("should return the list of pokemons", async () => {
-      httpGetMockResponse = [{ something: "here", andSomething: "here" }];
+      const expected = [bulbasaurExpectedResponse];
+      jest.spyOn(handlers, "computeResponseForSet").mockResolvedValue(expected);
 
-      await getAllPokemons(request, response);
+      await handlers.getAllPokemons(request, response);
 
-      expect(response.send).toHaveBeenCalledWith(httpGetMockResponse);
+      expect(response.send).toHaveBeenCalledWith(expected);
     });
   });
 });
@@ -258,5 +255,5 @@ const bulbasaurExpectedResponse = {
       },
     },
   ],
-  url: "url",
+  url: "https://pokeapi.co/api/v2/pokemon/1",
 };

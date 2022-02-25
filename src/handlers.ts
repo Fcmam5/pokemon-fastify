@@ -1,11 +1,12 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { httpGet } from "./infrastructure/http-client";
+import { httpGet } from "./infrastructure";
 import { getNotFoundResponse } from "./errors";
 import { PokemonListResponse } from "handlers.responses";
 import { PokemonWithStats } from "./models/PokemonWithStats";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
+// TODO: Use caching
 export async function getPokemonByName(
   request: FastifyRequest,
   reply: FastifyReply
@@ -24,7 +25,7 @@ export async function getPokemonByName(
     );
   }
 
-  reply.send(computeResponseForOne(response, url));
+  reply.send(computeResponseForOne(response));
 
   return reply;
 }
@@ -37,58 +38,36 @@ export async function getAllPokemons(
   const response = await httpGet<PokemonListResponse>(
     `${POKEMON_API_URL}?offset=20&limit=20`
   );
-  // computeResponse(response);
+  const computed = await computeResponseForSet(response);
 
-  reply.send(response);
+  reply.send(computed);
 
   return reply;
 }
 
-// export const computeResponse = async (response: any) => {
-//   const resp = response as any;
+// Requirements are unclear for the method that was implemented here;
+// It is really confusing to guess what's expected as it was using wrong object keys; and doing weird calculations
+export const computeResponseForSet = async (rs: PokemonListResponse) => {
+  const urls = rs.results.map((rs) => rs.url);
+  const promises = urls.map((url) => httpGet(url));
 
-//   let types = resp.types
-//     .map((type) => type.type)
-//     .map((type) => {
-//       return type.url;
-//     })
-//     .reduce((types, typeUrl) => types.push(typeUrl));
+  // Only supported in Node >=12.9.0: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled
+  const responses = await Promise.allSettled(promises);
 
-//   let pokemonTypes = [];
+  const rss = [];
 
-//   types.forEach((element) => {
-//     const http = require("http");
-//     const keepAliveAgent = new http.Agent({ keepAlive: true });
+  responses.forEach((rs) => {
+    if (rs.status === "rejected") {
+      // TODO: log warning
+      return;
+    }
+    rss.push(computeResponseForOne(rs.value));
+  });
+  return rss;
+};
 
-//     http.request({ hostname: element }, (response) =>
-//       pokemonTypes.push(response)
-//     );
-//   });
-
-//   if (pokemonTypes == undefined) throw pokemonTypes;
-
-//   response.stats.forEach((element) => {
-//     var stats = [];
-
-//     pokemonTypes.map((pok) =>
-//       pok.stats.map((st) =>
-//         st.stat.name.toUpperCase() == element.stat.name
-//           ? stats.push(st.base_state)
-//           : []
-//       )
-//     );
-
-//     if (stats) {
-//       let avg = stats.reduce((a, b) => a + b) / stats.length;
-//       element.averageStat = avg;
-//     } else {
-//       element.averageStat = 0;
-//     }
-//   });
-// };
-
-export const computeResponseForOne = (rs: any, url: string) => {
-  // The expected results are unclear, so
+export const computeResponseForOne = (rs: any) => {
+  // The expected results are unclear, so not doing anything in this method
   return new PokemonWithStats(
     rs.name,
     rs.height,
@@ -96,7 +75,7 @@ export const computeResponseForOne = (rs: any, url: string) => {
     rs.id,
     rs.sprites.front_default,
     rs.species,
-    url,
+    `${POKEMON_API_URL}/${rs.id}`,
     rs.stats
   );
 };

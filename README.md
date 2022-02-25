@@ -7,11 +7,14 @@ Fastify & TypeScript starter repository.
 ## Installation
 
 ```bash
-$ git clone https://github.com/Matschik/fastify-typescript-starter.git
-$ cd fastify-typescript-starter
+$ git clone git@github.com:Fcmam5/pokemon-fastify.git
+$ cd pokemon-fastify
 $ npm install
-$ rm -rf .git # Remove repository's git directory
 ```
+
+## Requirements
+
+** Node.js ** `12.9.0` or higher; Or just run [`nvm use`](./.nvmrc) in this repository
 
 ## Usage
 
@@ -21,6 +24,16 @@ $ npm run dev
 
 # debug
 $ npm run debug
+
+# test
+$ npm test
+
+# test (watch mode)
+$ npm run test:watch
+
+
+# check linting
+$ npm run lint
 
 # format with prettier
 $ npm run format

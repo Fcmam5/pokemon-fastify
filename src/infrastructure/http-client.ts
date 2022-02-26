@@ -12,6 +12,7 @@ const TEMPORARY_IN_MEMORY_CACHE = new Map();
  *    and it will be refreshed from a cronJob running as a crawler or a frequent consumer of the target API
  *
  *  Anyways, I did a small benchmark using the **time** Unix command and I called my endpoints repeatedly using httpie: https://github.com/httpie/httpie
+ *
  * Benchmark:
  *  Example: Get one Pokemon
  *    Using in-memory cache solution:

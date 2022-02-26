@@ -6,7 +6,6 @@ import { PokemonWithStats } from "./models/PokemonWithStats";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
-// TODO: Use caching
 export async function getPokemonByName(
   request: FastifyRequest,
   reply: FastifyReply
@@ -17,9 +16,11 @@ export async function getPokemonByName(
   const response = await httpGetWithCache<PokemonResponse>(url);
 
   if (!response) {
+    const msg = `The Pokemon with the name "${name}" is not found`;
+    request.log.warn(msg);
     return reply.code(404).send(
       getNotFoundResponse({
-        detail: `The Pokemon with the name "${name}" is not found`,
+        detail: msg,
         instance: `pokemon/${name}`,
       })
     );
@@ -36,9 +37,9 @@ export async function getAllPokemons(
 ) {
   // TODO: Implement pagination feature
   const response = await httpGetWithCache<PokemonListResponse>(
-    `${POKEMON_API_URL}?offset=20&limit=50`
+    `${POKEMON_API_URL}?offset=20&limit=20`
   );
-  const computed = await computeResponseForSet(response);
+  const computed = await computeResponseForSet(response, request);
 
   reply.send(computed);
 
@@ -47,9 +48,14 @@ export async function getAllPokemons(
 
 // Requirements are unclear for the method that was implemented here;
 // It is really confusing to guess what's expected as it was using wrong object keys; and doing weird calculations
-export const computeResponseForSet = async (rs: PokemonListResponse) => {
+export const computeResponseForSet = async (
+  rs: PokemonListResponse,
+  req?: FastifyRequest
+) => {
   const urls = rs.results.map((rs) => rs.url);
   const promises = urls.map((url) => httpGetWithCache<PokemonResponse>(url));
+
+  req.log.debug(`Fetching ${urls.length}`);
 
   // Only supported in Node >=12.9.0: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled
   const responses = await Promise.allSettled(promises);
@@ -58,11 +64,18 @@ export const computeResponseForSet = async (rs: PokemonListResponse) => {
 
   responses.forEach((rs) => {
     if (rs.status === "rejected") {
-      // TODO: log warning
+      req.log.warn("Failed to load pokemon", rs.reason);
       return;
     }
     rss.push(computeResponseForOne(rs.value));
   });
+
+  req.log.debug(
+    `Going to return  ${rss.length} Pokemons (${
+      urls.length - rss.length
+    } missing)`
+  );
+
   return rss;
 };
 

@@ -1,4 +1,3 @@
-import { FastifyReply, FastifyRequest } from "fastify";
 import * as handlers from "./handlers";
 
 let httpGetMockResponse;
@@ -19,8 +18,8 @@ describe("handlers", () => {
   });
 
   describe("getPokemonByName", () => {
-    let request: FastifyRequest;
-    let response: FastifyReply;
+    let request;
+    let response;
     let mockCode;
     let mockSend;
 
@@ -31,13 +30,17 @@ describe("handlers", () => {
         params: {
           name: "alice",
         },
-      } as FastifyRequest;
+        log: {
+          warn: jest.fn(),
+          debug: jest.fn(),
+        },
+      };
       mockCode = jest.fn().mockReturnThis();
       mockSend = jest.fn();
       response = {
         code: mockCode,
         send: mockSend,
-      } as FastifyReply;
+      };
     });
 
     it("should return a 404 error if the Pokemon is not found", async () => {
@@ -59,8 +62,8 @@ describe("handlers", () => {
   });
 
   describe("getAllPokemons", () => {
-    let request: FastifyRequest;
-    let response: FastifyReply;
+    let request;
+    let response;
     let mockCode;
     let mockSend;
 
@@ -71,14 +74,19 @@ describe("handlers", () => {
         params: {
           name: "alice",
         },
-      } as FastifyRequest;
+        log: {
+          warn: jest.fn(),
+          debug: jest.fn(),
+        },
+      };
       mockCode = jest.fn().mockReturnThis();
       mockSend = jest.fn();
       response = {
         code: mockCode,
         send: mockSend,
-      } as FastifyReply;
+      };
     });
+
     it("should return the list of pokemons", async () => {
       const expected = [bulbasaurExpectedResponse];
       jest.spyOn(handlers, "computeResponseForSet").mockResolvedValue(expected);

@@ -1,3 +1,4 @@
+import { v4 as uuidV4 } from "uuid";
 import fastify, {
   FastifyServerOptions,
   FastifyLoggerInstance,
@@ -7,8 +8,12 @@ import { Server, IncomingMessage, ServerResponse } from "http";
 import router from "./router";
 
 const serverOptions: FastifyServerOptions<Server, FastifyLoggerInstance> = {
-  // Logger only for production
-  logger: !!(process.env.NODE_ENV !== "development"),
+  logger: {
+    level: process.env.NODE_ENV === "development" ? "debug" : "info",
+  },
+  genReqId: () => uuidV4(),
+  requestIdHeader: "x-trace-id",
+  disableRequestLogging: true, // It's the proxy's responsibility
 };
 
 const app: FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(

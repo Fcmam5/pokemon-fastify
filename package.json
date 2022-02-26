@@ -7,6 +7,7 @@
     "debug": "nodemon --config nodemon-debug.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
+    "build": "rimraf dist && tsc",
     "prod": "cross-env NODE_ENV=production node dist/server.js",
     "test": "jest",
     "test:watch": "jest --watch"

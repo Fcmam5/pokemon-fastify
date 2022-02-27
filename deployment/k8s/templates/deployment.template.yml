@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pokemon
+spec:
+  selector:
+    matchLabels:
+      app: pokemon
+  template:
+    metadata:
+      labels:
+        app: pokemon
+    spec:
+      containers:
+        - name: app
+          image: ${IMG_VERSION}
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+        # Defining a sidecar (for now only taking care of logging HTTP requests)
+        - name: sidecar
+          image: docker.io/fcmam5/poke-sidecar:1.20.2-alpine-perl
+          ports:
+            - containerPort: 8080
+          resources:
+              limits:
+                memory: '128Mi'
+                cpu: '500m'

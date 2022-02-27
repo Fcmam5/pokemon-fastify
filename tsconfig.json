@@ -3,7 +3,7 @@
     "module": "commonjs",
     "noImplicitAny": false,
     "removeComments": true,
-    "target": "es6",
+    "target": "es2020",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src"

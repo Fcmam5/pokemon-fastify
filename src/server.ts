@@ -1,7 +1,6 @@
-import app from "./app";
+import app from './app';
+import { CONFIG } from './config';
 
-const FASTIFY_PORT = Number(process.env.FASTIFY_PORT) || 3000;
+app.listen(CONFIG.PORT);
 
-app.listen(FASTIFY_PORT);
-
-console.log(`🚀  Fastify server running on port ${FASTIFY_PORT}`);
+app.log.info(`🚀  Fastify server running on port ${CONFIG.PORT}`);

@@ -1,2 +1,10 @@
 dist
 node_modules
+
+.notes/
+.vscode
+
+# TODO Cleanup when moving to Helm
+# deployment/k8s/*.yml
+deployment/k8s/deployment.yml
+!deployment/k8s/templates/*.yml

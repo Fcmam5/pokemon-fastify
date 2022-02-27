@@ -1,5 +1,5 @@
-import { Species } from "./models/Species";
-import { Stat } from "./models/Stat";
+import { Species } from '../models/Species';
+import { Stat } from '../models/Stat';
 
 export type PokemonListResponse = {
   count: number;

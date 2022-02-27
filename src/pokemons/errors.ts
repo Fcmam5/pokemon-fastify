@@ -1,4 +1,4 @@
-import * as status from "http-status";
+import * as status from 'http-status';
 
 // Defines an https://datatracker.ietf.org/doc/html/rfc7807 conform HTTP responses
 // This file implements the necessary methods we use in this project;
@@ -23,7 +23,7 @@ interface _ResponseMethodParams {
 export const getBadRequestResponse = ({
   detail,
   instance,
-  title,
+  title
 }: _ResponseMethodParams = {}): ProblemDocument => {
   const { BAD_REQUEST } = status;
 
@@ -32,14 +32,14 @@ export const getBadRequestResponse = ({
     type: status[`${BAD_REQUEST}_NAME`] as string,
     title: title || (status[`${BAD_REQUEST}_MESSAGE`] as string),
     detail,
-    instance,
+    instance
   };
 };
 
 export const getNotFoundResponse = ({
   detail,
   instance,
-  title,
+  title
 }: _ResponseMethodParams = {}): ProblemDocument => {
   const { NOT_FOUND } = status;
 
@@ -48,6 +48,6 @@ export const getNotFoundResponse = ({
     type: status[`${NOT_FOUND}_NAME`] as string,
     title: title || (status[`${NOT_FOUND}_MESSAGE`] as string),
     detail,
-    instance,
+    instance
   };
 };

@@ -1,16 +1,17 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { httpGetWithCache } from "./infrastructure";
-import { getNotFoundResponse } from "./errors";
-import { PokemonListResponse, PokemonResponse } from "handlers.responses";
-import { PokemonWithStats } from "./models/PokemonWithStats";
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { httpGetWithCache } from '../../infrastructure';
+import { getNotFoundResponse } from '../errors';
+import { PokemonListResponse, PokemonResponse } from './handlers.responses';
+import { PokemonWithStats } from '../models/PokemonWithStats';
+import { CONFIG } from '../../config';
 
-const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
+const { POKEMON_API_URL } = CONFIG;
 
 export async function getPokemonByName(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const name: string = request.params["name"];
+  const name: string = request.params['name'];
   const url = `${POKEMON_API_URL}/${name}`;
 
   const response = await httpGetWithCache<PokemonResponse>(url);
@@ -21,7 +22,7 @@ export async function getPokemonByName(
     return reply.code(404).send(
       getNotFoundResponse({
         detail: msg,
-        instance: `pokemon/${name}`,
+        instance: `pokemon/${name}`
       })
     );
   }
@@ -63,8 +64,8 @@ export const computeResponseForSet = async (
   const rss = [];
 
   responses.forEach((rs) => {
-    if (rs.status === "rejected") {
-      req.log.warn("Failed to load pokemon", rs.reason);
+    if (rs.status === 'rejected') {
+      req.log.warn('Failed to load pokemon', rs.reason);
       return;
     }
     rss.push(computeResponseForOne(rs.value));

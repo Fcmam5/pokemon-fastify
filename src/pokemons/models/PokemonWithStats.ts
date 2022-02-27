@@ -1,5 +1,5 @@
-import { Species } from "./Species";
-import { Stat } from "./Stat";
+import { Species } from './Species';
+import { Stat } from './Stat';
 
 export class PokemonWithStats {
   public averageStat: number;

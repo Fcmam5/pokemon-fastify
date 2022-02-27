@@ -1,15 +1,15 @@
-import * as handlers from "./handlers";
+import * as handlers from './handlers';
 
 let httpGetMockResponse;
 
-jest.mock("./infrastructure/http-client", () => ({
-  httpGetWithCache: jest.fn().mockImplementation(() => httpGetMockResponse),
+jest.mock('../../infrastructure/http-client', () => ({
+  httpGetWithCache: jest.fn().mockImplementation(() => httpGetMockResponse)
 }));
 
-describe("handlers", () => {
-  describe("computeResponse", () => {
-    describe("computeResponseForOne", () => {
-      it("should calculate stats for one Pokemon", () => {
+describe('handlers', () => {
+  describe('computeResponse', () => {
+    describe('computeResponseForOne', () => {
+      it('should calculate stats for one Pokemon', () => {
         const rs = handlers.computeResponseForOne(bulbasaurMock);
 
         expect(rs).toEqual(bulbasaurExpectedResponse);
@@ -17,7 +17,7 @@ describe("handlers", () => {
     });
   });
 
-  describe("getPokemonByName", () => {
+  describe('getPokemonByName', () => {
     let request;
     let response;
     let mockCode;
@@ -28,22 +28,22 @@ describe("handlers", () => {
 
       request = {
         params: {
-          name: "alice",
+          name: 'alice'
         },
         log: {
           warn: jest.fn(),
-          debug: jest.fn(),
-        },
+          debug: jest.fn()
+        }
       };
       mockCode = jest.fn().mockReturnThis();
       mockSend = jest.fn();
       response = {
         code: mockCode,
-        send: mockSend,
+        send: mockSend
       };
     });
 
-    it("should return a 404 error if the Pokemon is not found", async () => {
+    it('should return a 404 error if the Pokemon is not found', async () => {
       httpGetMockResponse = null;
 
       await handlers.getPokemonByName(request, response);
@@ -52,7 +52,7 @@ describe("handlers", () => {
       expect(response.send).toHaveBeenCalled();
     });
 
-    it("should return the Pokemon data", async () => {
+    it('should return the Pokemon data', async () => {
       httpGetMockResponse = bulbasaurMock;
 
       await handlers.getPokemonByName(request, response);
@@ -61,7 +61,7 @@ describe("handlers", () => {
     });
   });
 
-  describe("getAllPokemons", () => {
+  describe('getAllPokemons', () => {
     let request;
     let response;
     let mockCode;
@@ -72,24 +72,24 @@ describe("handlers", () => {
 
       request = {
         params: {
-          name: "alice",
+          name: 'alice'
         },
         log: {
           warn: jest.fn(),
-          debug: jest.fn(),
-        },
+          debug: jest.fn()
+        }
       };
       mockCode = jest.fn().mockReturnThis();
       mockSend = jest.fn();
       response = {
         code: mockCode,
-        send: mockSend,
+        send: mockSend
       };
     });
 
-    it("should return the list of pokemons", async () => {
+    it('should return the list of pokemons', async () => {
       const expected = [bulbasaurExpectedResponse];
-      jest.spyOn(handlers, "computeResponseForSet").mockResolvedValue(expected);
+      jest.spyOn(handlers, 'computeResponseForSet').mockResolvedValue(expected);
 
       await handlers.getAllPokemons(request, response);
 
@@ -107,98 +107,98 @@ const bulbasaurMock = {
   held_items: [],
   id: 1,
   is_default: true,
-  location_area_encounters: "https://pokeapi.co/api/v2/pokemon/1/encounters",
+  location_area_encounters: 'https://pokeapi.co/api/v2/pokemon/1/encounters',
   moves: [],
-  name: "bulbasaur",
+  name: 'bulbasaur',
   order: 1,
   past_types: [],
   species: {
-    name: "bulbasaur",
-    url: "https://pokeapi.co/api/v2/pokemon-species/1/",
+    name: 'bulbasaur',
+    url: 'https://pokeapi.co/api/v2/pokemon-species/1/'
   },
   sprites: {
     back_default:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png",
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
     back_female: null,
     back_shiny:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png",
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png',
     back_shiny_female: null,
     front_default:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
     front_female: null,
     front_shiny:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png",
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png',
     front_shiny_female: null,
     other: {},
-    versions: {},
+    versions: {}
   },
   stats: [
     {
       base_stat: 45,
       effort: 0,
       stat: {
-        name: "hp",
-        url: "https://pokeapi.co/api/v2/stat/1/",
-      },
+        name: 'hp',
+        url: 'https://pokeapi.co/api/v2/stat/1/'
+      }
     },
     {
       base_stat: 49,
       effort: 0,
       stat: {
-        name: "attack",
-        url: "https://pokeapi.co/api/v2/stat/2/",
-      },
+        name: 'attack',
+        url: 'https://pokeapi.co/api/v2/stat/2/'
+      }
     },
     {
       base_stat: 49,
       effort: 0,
       stat: {
-        name: "defense",
-        url: "https://pokeapi.co/api/v2/stat/3/",
-      },
+        name: 'defense',
+        url: 'https://pokeapi.co/api/v2/stat/3/'
+      }
     },
     {
       base_stat: 65,
       effort: 1,
       stat: {
-        name: "special-attack",
-        url: "https://pokeapi.co/api/v2/stat/4/",
-      },
+        name: 'special-attack',
+        url: 'https://pokeapi.co/api/v2/stat/4/'
+      }
     },
     {
       base_stat: 65,
       effort: 0,
       stat: {
-        name: "special-defense",
-        url: "https://pokeapi.co/api/v2/stat/5/",
-      },
+        name: 'special-defense',
+        url: 'https://pokeapi.co/api/v2/stat/5/'
+      }
     },
     {
       base_stat: 45,
       effort: 0,
       stat: {
-        name: "speed",
-        url: "https://pokeapi.co/api/v2/stat/6/",
-      },
-    },
+        name: 'speed',
+        url: 'https://pokeapi.co/api/v2/stat/6/'
+      }
+    }
   ],
   types: [
     {
       slot: 1,
       type: {
-        name: "grass",
-        url: "https://pokeapi.co/api/v2/type/12/",
-      },
+        name: 'grass',
+        url: 'https://pokeapi.co/api/v2/type/12/'
+      }
     },
     {
       slot: 2,
       type: {
-        name: "poison",
-        url: "https://pokeapi.co/api/v2/type/4/",
-      },
-    },
+        name: 'poison',
+        url: 'https://pokeapi.co/api/v2/type/4/'
+      }
+    }
   ],
-  weight: 69,
+  weight: 69
 };
 
 const bulbasaurExpectedResponse = {
@@ -206,62 +206,62 @@ const bulbasaurExpectedResponse = {
   base_experience: 64,
   height: 7,
   id: 1,
-  name: "bulbasaur",
+  name: 'bulbasaur',
   species: {
-    name: "bulbasaur",
-    url: "https://pokeapi.co/api/v2/pokemon-species/1/",
+    name: 'bulbasaur',
+    url: 'https://pokeapi.co/api/v2/pokemon-species/1/'
   },
   sprite_img:
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
   stats: [
     {
       base_stat: 45,
       effort: 0,
       stat: {
-        name: "hp",
-        url: "https://pokeapi.co/api/v2/stat/1/",
-      },
+        name: 'hp',
+        url: 'https://pokeapi.co/api/v2/stat/1/'
+      }
     },
     {
       base_stat: 49,
       effort: 0,
       stat: {
-        name: "attack",
-        url: "https://pokeapi.co/api/v2/stat/2/",
-      },
+        name: 'attack',
+        url: 'https://pokeapi.co/api/v2/stat/2/'
+      }
     },
     {
       base_stat: 49,
       effort: 0,
       stat: {
-        name: "defense",
-        url: "https://pokeapi.co/api/v2/stat/3/",
-      },
+        name: 'defense',
+        url: 'https://pokeapi.co/api/v2/stat/3/'
+      }
     },
     {
       base_stat: 65,
       effort: 1,
       stat: {
-        name: "special-attack",
-        url: "https://pokeapi.co/api/v2/stat/4/",
-      },
+        name: 'special-attack',
+        url: 'https://pokeapi.co/api/v2/stat/4/'
+      }
     },
     {
       base_stat: 65,
       effort: 0,
       stat: {
-        name: "special-defense",
-        url: "https://pokeapi.co/api/v2/stat/5/",
-      },
+        name: 'special-defense',
+        url: 'https://pokeapi.co/api/v2/stat/5/'
+      }
     },
     {
       base_stat: 45,
       effort: 0,
       stat: {
-        name: "speed",
-        url: "https://pokeapi.co/api/v2/stat/6/",
-      },
-    },
+        name: 'speed',
+        url: 'https://pokeapi.co/api/v2/stat/6/'
+      }
+    }
   ],
-  url: "https://pokeapi.co/api/v2/pokemon/1",
+  url: 'https://pokeapi.co/api/v2/pokemon/1'
 };

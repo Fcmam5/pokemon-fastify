@@ -1,20 +1,20 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { ProblemDocument } from "./errors";
-import { checkNameInParams as checkNameInParamsFn } from "./middlewares";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { ProblemDocument } from '../../errors';
+import { checkNameInParams as checkNameInParamsFn } from './middlewares';
 
 const BAD_REQUEST_RESPONSE: ProblemDocument = {
   status: 400,
-  type: "Bad request",
-  title: "BAD_REQUEST",
+  type: 'Bad request',
+  title: 'BAD_REQUEST'
 };
 
-jest.mock("./errors", () => ({
+jest.mock('../../errors', () => ({
   getBadRequestResponse: jest
     .fn()
-    .mockImplementation(() => BAD_REQUEST_RESPONSE),
+    .mockImplementation(() => BAD_REQUEST_RESPONSE)
 }));
 
-describe("middlewares", () => {
+describe('middlewares', () => {
   let request: FastifyRequest;
   let response: FastifyReply;
   let mockCode;
@@ -27,34 +27,34 @@ describe("middlewares", () => {
     mockSend = jest.fn();
     response = {
       code: mockCode,
-      send: mockSend,
+      send: mockSend
     } as FastifyReply;
     doneCb = jest.fn();
   });
 
-  it("should throw a 400 error if the name is not present", () => {
+  it('should throw a 400 error if the name is not present', () => {
     // request.params["name"]
     checkNameInParamsFn(doneCb)(request, response);
 
     expect(mockCode).toHaveBeenCalledWith(400);
   });
 
-  it("should throw a 400 error if the name consists of spaces only", () => {
-    request.params["name"] = "  ";
+  it('should throw a 400 error if the name consists of spaces only', () => {
+    request.params['name'] = '  ';
     checkNameInParamsFn(doneCb)(request, response);
 
     _assertBadRequest(mockCode, mockSend, doneCb);
   });
 
-  it("should throw a 400 error if the name is empty", () => {
-    request.params["name"] = "";
+  it('should throw a 400 error if the name is empty', () => {
+    request.params['name'] = '';
     checkNameInParamsFn(doneCb)(request, response);
 
     _assertBadRequest(mockCode, mockSend, doneCb);
   });
 
-  it("should call the callback if the name parameter is valid", () => {
-    request.params["name"] = "Pikachu";
+  it('should call the callback if the name parameter is valid', () => {
+    request.params['name'] = 'Pikachu';
     checkNameInParamsFn(doneCb)(request, response);
 
     expect(mockCode).not.toHaveBeenCalledWith(400);

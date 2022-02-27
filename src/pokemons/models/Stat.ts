@@ -1,4 +1,4 @@
-import { StatD } from "./StatD";
+import { StatD } from './StatD';
 
 export interface Stat {
   base_stat: number;

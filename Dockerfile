@@ -1,29 +1,17 @@
-FROM node:12-alpine as Builder
-
+FROM node:12-alpine as builder
 WORKDIR /usr/src/app
-
 COPY package*.json ./
-
-RUN npm install --only=development
-
+RUN npm install
 COPY . .
-
 RUN npm run build
 
 FROM node:12-alpine as production
-
 ENV NODE_ENV=production
-
 WORKDIR /usr/src/app
-
+RUN chown node:node .
+USER node
 COPY package*.json ./
-
 RUN npm install --only=production
-
-COPY . .
-
-COPY --from=Builder /usr/src/app/dist ./dist
-
+COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 3000
-
 CMD [ "node", "dist/server" ]

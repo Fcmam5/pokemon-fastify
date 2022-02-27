@@ -1,6 +1,7 @@
 {
   "name": "fast-poke",
-  "version": "0.1.0-SNAPSHOT",
+  "version": "0.1.1",
+  "private": "true",
   "scripts": {
     "start": "npm run dev",
     "dev": "cross-env NODE_ENV=development nodemon",
@@ -19,7 +20,8 @@
     "axios": "^0.26.0",
     "fastify": "^3.27.2",
     "http-status": "^1.5.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
@@ -27,7 +29,6 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
-    "cross-env": "^7.0.3",
     "eslint": "^8.10.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",

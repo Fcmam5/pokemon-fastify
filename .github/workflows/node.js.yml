@@ -30,11 +30,3 @@ jobs:
     - run: npm run lint
     - run: npm test
 
-    - name: Docker Build & Push
-      uses: mr-smithers-excellent/docker-build-push@v5.6
-      with:
-        registry: docker.io
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        image: ${{ secrets.DOCKER_HUB_USERNAME }}/poke
-        tags: ${{ env.GITHUB_SHA }}

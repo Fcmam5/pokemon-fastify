@@ -7,6 +7,7 @@ import fastify, {
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { CONFIG } from './config';
 import router from './pokemons/router';
+import healthCheckRouter from './healthcheck';
 
 const serverOptions: FastifyServerOptions<Server, FastifyLoggerInstance> = {
   logger: {
@@ -21,6 +22,7 @@ const app: FastifyInstance<Server, IncomingMessage, ServerResponse> =
   fastify(serverOptions);
 
 // Middleware
+app.register(healthCheckRouter);
 app.register(router);
 
 export default app;

@@ -5,7 +5,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: [ develop, fix/debug-handlers-file ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -21,4 +21,12 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         image: fcmam5/poke
-        tags: ${{ env.GITHUB_SHA }}
+        tags: ${{ github.sha }}
+
+    - name: Update k8s deployment files
+      env:
+        IMG_VERSION: fcmam5/poke:${{ github.sha }}
+      run: envsubst < deployment/k8s/templates/deployment.template.yml > deployment/k8s/deployment.yml
+
+    - name: Deploy to Kubernetes # REPLACE ME
+      run: cat ./deployment/k8s/deployment.yml

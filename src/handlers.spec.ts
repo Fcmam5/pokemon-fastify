@@ -202,7 +202,7 @@ const bulbasaurMock = {
 };
 
 const bulbasaurExpectedResponse = {
-  averageStat: 15,
+  averageStat: 53,
   base_experience: 64,
   height: 7,
   id: 1,

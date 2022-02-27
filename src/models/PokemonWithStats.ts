@@ -21,6 +21,6 @@ export class PokemonWithStats {
   private calculateAverageStat() {
     const count = this.stats.length;
     this.averageStat =
-      this.stats.reduce((acc, st) => st.base_stat + st.base_stat, 0) / count;
+      this.stats.reduce((acc, st) => acc + st.base_stat, 0) / count;
   }
 }

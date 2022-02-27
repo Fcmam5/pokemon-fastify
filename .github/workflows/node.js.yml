@@ -17,12 +17,11 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.4.0
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -31,4 +30,11 @@ jobs:
     - run: npm run lint
     - run: npm test
 
-# TODO: Create a workflow to build and push docker images
+    - name: Docker Build & Push
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      with:
+        registry: docker.io
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        image: ${{ secrets.DOCKER_HUB_USERNAME }}/poke
+        tags: ${{ env.GITHUB_SHA }}

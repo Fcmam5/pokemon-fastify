@@ -50,7 +50,7 @@ $ npm run prod
 
 ```bash
 # Build the image
-docker build . -t "fcmam5/poke:$(jq .version package.json -r)" # You may need to install "jq"
+docker build . -t "fcmam5/poke:$(jq .version package.json -r)" # You may need to install "jq"; or use: grep version package.json | awk -F \" '{print $4}'
 
 # Run the image (v0.1.0-SNAPSHOT as example)
 docker run -p 3000:3000 fcmam5/poke:0.1.0-SNAPSHOT

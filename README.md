@@ -14,7 +14,7 @@ $ npm install
 
 ## Requirements
 
-** Node.js ** `12.9.0` or higher; Or just run [`nvm use`](./.nvmrc) in this repository
+** Node.js ** `12.9.0` or higher; Or just run [`nvm use`](./.nvmrc) to use the recommended version
 
 ## Usage
 
